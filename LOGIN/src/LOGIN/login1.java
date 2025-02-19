@@ -4,7 +4,7 @@ public class login1 {
 
 	public static void main(String[] args) {
 		
-		Ventana objeto = Ventana;
+		Ventana objeto = new  Ventana();
 
 	}
 
