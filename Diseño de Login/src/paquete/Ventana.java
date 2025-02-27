@@ -31,24 +31,44 @@ public class Ventana extends JFrame {
 		setMaximumSize(new Dimension(900, 900));
     	setMinimumSize(new Dimension(400, 400));
     	
+    	
     	JMenuBar barra = new JMenuBar();
     	
-    	JMenu file = new JMenu("Archivos");
+    	JMenu file = new JMenu("Files");//////////////////////////////////
     	barra.add(file);
     	
-    	JMenu edit = new JMenu("Edit");
-    	barra.add(edit);
+    	JMenuItem nuevo = new JMenuItem("New");
+    	file.add(nuevo);
     	
-    	JMenu help = new JMenu("Help");
-    	barra.add(help);
-    	
-    	
-    	
-    	JMenuItem open = new JMenuItem("Abrir");
+    	JMenuItem open = new JMenuItem("Open");
     	file.add(open);
     	
-    	JMenuItem cerrar = new JMenuItem("cerrar");
+    	JMenuItem cerrar = new JMenuItem("Close");
     	file.add(cerrar);
+    	
+    	JMenu edit = new JMenu("Edit");//////////////////////////////////
+    	barra.add(edit);
+    	
+    	JMenuItem copy = new JMenuItem("Copy");
+    	edit.add(copy);
+    	
+    	JMenuItem paste = new JMenuItem("Paste");
+    	edit.add(paste);
+    	
+    	JMenuItem select = new JMenuItem("Select All");
+    	edit.add(select);
+    	
+    	JMenu help = new JMenu("Help");///////////////////////////////////
+    	barra.add(help);
+    	
+    	JMenuItem asistente = new JMenuItem("Assistant");
+    	help.add(asistente);
+    	
+    	JMenuItem buscador = new JMenuItem("Search");
+    	help.add(buscador);
+    	
+    	JMenuItem Sponsor = new JMenuItem("Sponsor");
+    	help.add(Sponsor);
     	
     	this.setJMenuBar(barra);
     	
