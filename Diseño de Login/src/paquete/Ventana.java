@@ -11,6 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -28,8 +31,30 @@ public class Ventana extends JFrame {
 		setMaximumSize(new Dimension(900, 900));
     	setMinimumSize(new Dimension(400, 400));
     	
+    	JMenuBar barra = new JMenuBar();
+    	
+    	JMenu file = new JMenu("Archivos");
+    	barra.add(file);
+    	
+    	JMenu edit = new JMenu("Edit");
+    	barra.add(edit);
+    	
+    	JMenu help = new JMenu("Help");
+    	barra.add(help);
+    	
+    	
+    	
+    	JMenuItem open = new JMenuItem("Abrir");
+    	file.add(open);
+    	
+    	JMenuItem cerrar = new JMenuItem("cerrar");
+    	file.add(cerrar);
+    	
+    	this.setJMenuBar(barra);
+    	
     	this.add(this.login());
     	this.repaint();
+    	this.revalidate();
     	
 	}
 	
@@ -95,7 +120,7 @@ public class Ventana extends JFrame {
         
         JLabel Olvido = new JLabel("¿Olvidaste tu contraseña?");
         Olvido.setSize(200, 20);
-        Olvido.setLocation(450, 212);
+        Olvido.setLocation(448, 215);
         Olvido.setFont(new Font("Italic", Font.BOLD, 12));
         Olvido.setForeground(Color.WHITE);
         fondo.add(Olvido);
