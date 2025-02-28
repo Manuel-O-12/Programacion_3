@@ -1,11 +1,16 @@
 package paquete;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -22,8 +27,64 @@ public class Ventana extends JFrame {
 		setMaximumSize(new Dimension(900,900));
 		setMinimumSize(new Dimension(200,200));
 		
-		this.add(this,calculadora());
-		this.repaint();
+		//this.add(this.calculadora());
+		//this.repaint();
+		this.add(this.calcular2());
+		
+	}
+	
+	private JPanel calcular2() {
+		
+		Font fuente = new Font("Calibri",Font.BOLD,22);
+		
+		JPanel panel = new JPanel();
+		//panel.setBackground(Color.CYAN);
+		panel.setSize(330,380);
+		panel.setLocation(0, 0);
+		panel.setOpaque(true);
+		panel.setLayout(new BorderLayout());
+		
+		JLabel results = new JLabel("12.5");
+		results.setBackground(Color.WHITE);
+		results.setOpaque(true);
+		results.setFont(fuente);
+		results.setHorizontalAlignment(JLabel.RIGHT);
+		panel.add(results,BorderLayout.NORTH);
+		
+		JPanel centro = new JPanel();
+		centro.setBackground(Color.GREEN);
+		centro.setOpaque(true);
+		centro.setLayout(new BorderLayout());
+		panel.add(centro,BorderLayout.CENTER);
+		
+		JPanel botones = new JPanel();
+		botones.setLayout(new GridLayout(4,3));
+		centro.add(botones,BorderLayout.CENTER);
+		
+		String [] botones1 = {"9","8","7","6","5","4","3","2","1","0"};
+		
+		for (String botones2 : botones1) {
+			JButton botones3 = new JButton(botones2);
+			botones.setFont(fuente);
+			botones.add(botones3);
+		}
+		
+		JPanel simbolos = new JPanel();
+		simbolos.setLayout(new GridLayout(6,0));
+		centro.add(simbolos,BorderLayout.LINE_END);
+		
+		String [] simbolos1 = {"+","-","*","/","=","CE"};
+		
+		for (String simbolos2 : simbolos1) {
+			JButton simbolos4 = new JButton(simbolos2);
+			simbolos.setFont(fuente);
+			simbolos.add(simbolos4);
+		}
+		
+		this.add(panel);
+		
+		return panel;
+		
 	}
 	
 	private JPanel calculadora() {
@@ -158,7 +219,7 @@ public class Ventana extends JFrame {
         
 		
 		this.add(Panel);
-        this.repaint();
+        //this.repaint();
         
 		return Panel;
 		
