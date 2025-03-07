@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 public class Winaplica {
 
-	private JFrame frame;
+	private JFrame frmRegistroDeUsuarios;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -38,7 +38,7 @@ public class Winaplica {
 			public void run() {
 				try {
 					Winaplica window = new Winaplica();
-					window.frame.setVisible(true);
+					window.frmRegistroDeUsuarios.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -57,16 +57,17 @@ public class Winaplica {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(128, 255, 128));
-		frame.setBounds(100, 100, 649, 540);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmRegistroDeUsuarios = new JFrame();
+		frmRegistroDeUsuarios.setTitle("REGISTRO DE USUARIOS");
+		frmRegistroDeUsuarios.getContentPane().setBackground(new Color(128, 255, 128));
+		frmRegistroDeUsuarios.setBounds(100, 100, 649, 540);
+		frmRegistroDeUsuarios.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JLabel lblNewLabel = new JLabel("REGISTRO DE USUARIOS");
-		frame.getContentPane().add(lblNewLabel, BorderLayout.NORTH);
+		frmRegistroDeUsuarios.getContentPane().add(lblNewLabel, BorderLayout.NORTH);
 		
 		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		frmRegistroDeUsuarios.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new GridLayout(2, 2, 0, 0));
 		
 		JPanel panel_3 = new JPanel();
