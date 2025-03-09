@@ -61,7 +61,7 @@ public class Ventana extends JFrame {
 		botones.setLayout(new GridLayout(4,3));
 		centro.add(botones,BorderLayout.CENTER);
 		
-		String [] botones1 = {"9","8","7","6","5","4","3","2","1","0"};
+		String [] botones1 = {"9","8","7","6","5","4","3","2","1","0","",""};
 		
 		for (String botones2 : botones1) {
 			JButton botones3 = new JButton(botones2);
@@ -80,6 +80,7 @@ public class Ventana extends JFrame {
 			simbolos.setFont(fuente);
 			simbolos.add(simbolos4);
 		}
+		
 		
 		this.add(panel);
 		
