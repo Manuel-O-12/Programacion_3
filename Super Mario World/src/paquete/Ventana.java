@@ -4,7 +4,11 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -30,23 +34,35 @@ public class Ventana extends JPanel{
 		mundo.setColor(Color.decode("#092CDB"));
 		mundo.fillRect(0, 0, getWidth(), getHeight());
 		
+		//NUBES////////////////////////////////////////////////////////////////
+		//nubes1
+		mundo.setColor(Color.WHITE);
+		mundo.fillRoundRect(630, 180, 170, 35, 50, 50);
+		mundo.fillRoundRect(240, 380, 170, 35, 50, 50);
+		mundo.fillRoundRect(120, 430, 170, 35, 50, 50);
+		mundo.fillRoundRect(240, 480, 170, 35, 50, 50);
 		
 		//MONTAÑAS/////////////////////////////////////////////////////////////
 		//MONTAÑAS1
 		mundo.setColor(Color.decode("#cadffb"));
 		mundo.fillRoundRect(500, 50, 205, 705, 200, 200);
-		
 		mundo.fillRoundRect(298, 150, 205, 705, 200, 200);
-		
 		mundo.fillRoundRect(20, 130, 205, 705, 200, 200);
+		
+		//nubes2//////////////////////////////////////////////////////////
+		mundo.setColor(Color.WHITE);
+		mundo.fillRoundRect(250, 120, 180, 35, 50, 50);
+		mundo.fillRoundRect(700, 140, 130, 35, 50, 50);
+		mundo.fillRoundRect(-50, 240, 200, 35, 50, 50);
+		mundo.fillRoundRect(210, 280, 170, 35, 50, 50);
+		mundo.fillRoundRect(480, 300, 130, 35, 50, 50);
+		mundo.fillRoundRect(800, 320, 130, 35, 50, 50);
 		
 		//MONTAÑAS2
 		mundo.setColor(Color.decode("#6a9cde"));
 		mundo.fillRoundRect(-50, 330, 200, 705, 175, 175);
-		
 		mundo.fillRoundRect(298, 330, 250, 705, 200, 200);
-		
-		mundo.fillRoundRect(548, 220, 240, 705, 150, 150);
+		mundo.fillRoundRect(548, 220, 220, 705, 150, 150);
 		
 		//suelo////////////////////////////////////////////////////////////////
 		
@@ -67,11 +83,11 @@ public class Ventana extends JPanel{
 		mundo.drawRect(400, 450, 55, 70);
 		//horizontal
 		mundo.setColor(Color.decode("#4c007d"));
-		mundo.fillRect(375, 405, 110, 45);
+		mundo.fillRect(390, 420, 75, 30);
 		mundo.setColor(Color.BLACK);
-		mundo.drawRect(375, 405, 110, 45);
+		mundo.drawRect(390, 420, 75, 30);
 		
-		//pared////////////////////////////////////////////////////////////////
+		//paredES////////////////////////////////////////////////////////////////
 		
 		//gris
 		mundo.setColor(Color.decode("#b5b5b5"));
@@ -143,11 +159,36 @@ public class Ventana extends JPanel{
 		mundo.drawRect(820, 470, 55, 50);
 		//horizontal
 		mundo.setColor(Color.decode("#4c007d"));
-		mundo.fillRect(800, 450, 90, 35);
+		mundo.fillRect(810, 450, 75, 30);
 		mundo.setColor(Color.BLACK);
-		mundo.drawRect(800, 450, 90, 35);
+		mundo.drawRect(810, 450, 75, 30);
 		
+		//OVALOS///////////////////////////////////////////////////////////////
+		mundo.setColor(Color.WHITE);
+		mundo.fillOval(160, 190, 25, 40);
+		mundo.fillOval(160, 270, 25, 40);
+		mundo.fillOval(70, 294, 25, 40);
 		
+		mundo.fillOval(430, 190, 25, 40);
+		mundo.fillOval(380, 250, 25, 40);
+		mundo.fillOval(310, 320, 25, 40);
+		
+		mundo.fillOval(610, 105, 25, 40);
+		mundo.fillOval(540, 190, 25, 40);
+		
+		mundo.fillOval(610, 305, 25, 40);
+		mundo.fillOval(680, 390, 25, 40);
+		
+		try {
+			BufferedImage image = ImageIO.read(new File("mario1.png"));
+			
+			mundo.drawImage(image, 570, 450, 50, 70, null);
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		
