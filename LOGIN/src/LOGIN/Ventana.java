@@ -3,18 +3,23 @@ package LOGIN;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
 public class Ventana extends JFrame {
 
@@ -87,10 +92,50 @@ public class Ventana extends JFrame {
         acceder.setSize(120, 40);
         acceder.setLocation(190, 270);
         acceder.setFont(new Font("Calibri", Font.BOLD, 15));
+        
+        acceder.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				boolean flag1=false;
+				if (correo.getText().equals("")) {
+					
+					correo.setBorder(BorderFactory.createLineBorder(Color.RED,3));
+				}
+				
+				else {
+					correo.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
+					flag1=true;
+				
+				}
+				
+				
+				String micontrasena = new String(contrasena.getPassword());
+				
+				boolean flag2 = false;
+				if (micontrasena.equals("")) {
+					
+					contrasena.setBorder(BorderFactory.createLineBorder(Color.RED,3));
+				}
+				
+				else {
+					contrasena.setBorder(BorderFactory.createLineBorder(Color.GREEN,3));
+					flag2=true;
+				}
+				
+				if (flag1 && flag2) {
+					JOptionPane.showMessageDialog(null, "Ha ocurrido un error");
+				}
+				
+			}
+		});
+        
         Panel.add(acceder);
         
-        this.add(Panel);
-        this.repaint();
+        
+       /* this.add(Panel);
+        this.repaint();*/
         
         
         //REGISTRO------------------------------------------------------------------------------------
@@ -178,6 +223,11 @@ public class Ventana extends JFrame {
         cuenta.setFont(new Font("Calibri", Font.BOLD, 15));
         registro.add(cuenta);
         
+        
+        
+        
+        
+        
         this.add(registro);
         this.repaint();
         
@@ -197,5 +247,8 @@ public class Ventana extends JFrame {
 		return registro();
     	
     }*/
+    
+    
+    
 
 }
