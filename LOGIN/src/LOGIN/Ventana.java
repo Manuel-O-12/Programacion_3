@@ -94,7 +94,7 @@ public class Ventana extends JFrame {
         acceder.setFont(new Font("Calibri", Font.BOLD, 15));
         
         acceder.addActionListener(new ActionListener() {
-			
+			//
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
@@ -125,7 +125,7 @@ public class Ventana extends JFrame {
 				}
 				
 				if (flag1 && flag2) {
-					JOptionPane.showMessageDialog(null, "Ha ocurrido un error");
+					JOptionPane.showMessageDialog(null, "REGISTRO EXITOSO");
 				}
 				
 			}
