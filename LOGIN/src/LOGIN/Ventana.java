@@ -40,40 +40,122 @@ public class Ventana extends JFrame {
 
 		JMenuBar barra = new JMenuBar();
 
-		JMenu file = new JMenu("Files");//////////////////////////////////
+		JMenu file = new JMenu("Cuenta");//////////////////////////////////
 		barra.add(file);
 
-		JMenuItem nuevo = new JMenuItem("New");
+		JMenuItem nuevo = new JMenuItem("Login");
+		nuevo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("login");
+				
+			}
+		});
 		file.add(nuevo);
+		
 
-		JMenuItem open = new JMenuItem("Open");
+		JMenuItem open = new JMenuItem("Registro");
+		open.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("registro");
+				
+			}
+		});
 		file.add(open);
 
-		JMenuItem cerrar = new JMenuItem("Close");
+		JMenuItem cerrar = new JMenuItem("Recuperacion de cuenta");
+		cerrar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		file.add(cerrar);
 
-		JMenu edit = new JMenu("Edit");//////////////////////////////////
+		JMenu edit = new JMenu("Usuarios");//////////////////////////////////
 		barra.add(edit);
 
-		JMenuItem copy = new JMenuItem("Copy");
+		JMenuItem copy = new JMenuItem("Alta");
+		copy.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		edit.add(copy);
 
-		JMenuItem paste = new JMenuItem("Paste");
+		JMenuItem paste = new JMenuItem("Baja");
+		paste.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		edit.add(paste);
 
-		JMenuItem select = new JMenuItem("Select All");
+		JMenuItem select = new JMenuItem("Consultar");
+		select.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		edit.add(select);
 
-		JMenu help = new JMenu("Help");///////////////////////////////////
+		JMenu help = new JMenu("Ayuda");///////////////////////////////////
 		barra.add(help);
 
-		JMenuItem asistente = new JMenuItem("Assistant");
+		JMenuItem asistente = new JMenuItem("¿Como crear un usuario?");
+		asistente.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		help.add(asistente);
 
-		JMenuItem buscador = new JMenuItem("Search");
+		JMenuItem buscador = new JMenuItem("¿Como acceder al sistema?");
+		buscador.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		help.add(buscador);
 
-		JMenuItem Sponsor = new JMenuItem("Sponsor");
+		JMenuItem Sponsor = new JMenuItem("¿Que pasa si olvido mi contraseña?");
+		Sponsor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				router("Recuperacion");
+				
+			}
+		});
 		help.add(Sponsor);
 
 		this.setJMenuBar(barra);
@@ -90,7 +172,7 @@ public class Ventana extends JFrame {
 
 		JPanel Panel = new JPanel();
 
-		Panel.setBackground(Color.WHITE);
+		Panel.setBackground(Color.decode("#e9c46a"));
 		Panel.setOpaque(true);
 		Panel.setSize(500, 800);
 		Panel.setLocation(0, 0);
@@ -327,6 +409,8 @@ public class Ventana extends JFrame {
 			}
 		});
 		
+		registro.add(login);
+		
 		//registro.add(login);
 
 		//this.add(registro);
@@ -335,7 +419,75 @@ public class Ventana extends JFrame {
 		return registro;
 
 	}
+	
+	
+	public JPanel recuperacion() {
+		
+		JPanel recuperacion1 = new JPanel();
 
+		recuperacion1.setBackground(Color.CYAN);
+		recuperacion1.setOpaque(true);
+		recuperacion1.setSize(500, 800);
+		recuperacion1.setLocation(1000 / 2, 0);
+		recuperacion1.setLayout(null);
+
+		JLabel titleR = new JLabel("Recuperacion de cuenta");
+		titleR.setSize(200, 40);
+		titleR.setLocation(140, 40);
+		titleR.setHorizontalAlignment(JLabel.CENTER);
+		titleR.setFont(new Font("Calibri", Font.BOLD, 30));
+		recuperacion1.add(titleR);
+		
+		
+		return recuperacion1;
+		
+	}
+	
+	public JPanel alta() {
+		
+		JPanel alta1 = new JPanel();
+
+		alta1.setBackground(Color.CYAN);
+		alta1.setOpaque(true);
+		alta1.setSize(500, 800);
+		alta1.setLocation(1000 / 2, 0);
+		alta1.setLayout(null);
+
+		JLabel titleR = new JLabel("Recuperacion de cuenta");
+		titleR.setSize(200, 40);
+		titleR.setLocation(140, 40);
+		titleR.setHorizontalAlignment(JLabel.CENTER);
+		titleR.setFont(new Font("Calibri", Font.BOLD, 30));
+		alta1.add(titleR);
+		
+		
+		return alta1;
+		
+	}
+	
+	public JPanel baja() {
+		
+		JPanel baja1 = new JPanel();
+
+		baja1.setBackground(Color.CYAN);
+		baja1.setOpaque(true);
+		baja1.setSize(500, 800);
+		baja1.setLocation(1000 / 2, 0);
+		baja1.setLayout(null);
+
+		JLabel titleR = new JLabel("Recuperacion de cuenta");
+		titleR.setSize(200, 40);
+		titleR.setLocation(140, 40);
+		titleR.setHorizontalAlignment(JLabel.CENTER);
+		titleR.setFont(new Font("Calibri", Font.BOLD, 30));
+		baja1.add(titleR);
+		
+		
+		return baja1;
+		
+	}
+	
+	
 	public void router(String router) {
 		this.getContentPane().removeAll();
 		if (router.equals("login")) {
@@ -344,6 +496,14 @@ public class Ventana extends JFrame {
 
 		if (router.equals("registro")) {
 			this.add(this.registro());
+		}
+		
+		if (router.equals("Recuperacion")) {
+			this.add(this.recuperacion());
+		}
+		
+		if (router.equals("alta")) {
+			this.add(this.recuperacion());
 		}
 
 		this.repaint();
