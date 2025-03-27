@@ -16,6 +16,7 @@ import java.awt.Shape;
 import javax.swing.JButton;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -26,7 +27,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -34,26 +36,42 @@ import javax.swing.JSlider;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.util.Iterator;
+import java.util.List;
 
-class ColoredShape {
+
+class Trazo{
+	List<Point> puntos;
+	float grosor;
+	Color color;
 	
-    Shape shape;
-    Color color;
+	public Trazo(List<Point> puntos, float grosor, Color color) {
+		this.puntos = puntos;
+		this.grosor = grosor;
+		this.color = color;
+	}
 
-    public ColoredShape(Shape shape, Color color) {
-        this.shape = shape;
-        this.color = color;
-    }
+	public Color getColor() {
+		// TODO Auto-generated method stub
+		return this.color;
+	}
 }
 
-public class paint {
+public class paint implements MouseListener, MouseMotionListener {
 
 	private JFrame frmPaint;
+	
+	private DrawingPanel drawingPanel; 
+ 	
+ 	private Point lastPoint;
+
+ 	private List<Point> points = new ArrayList<>();
+ 	
+     List<Trazo> listaDeTrazos = new ArrayList<>();
+     
+    private float currentStrokeWidth = 5.0f;
+    
     private Color currentColor = Color.BLACK;
-    private int strokeSize = 5;
-    private ArrayList<ColoredShape> shapes = new ArrayList<>();
-    private Point startPoint = null;
-    private JPanel panel_Dibujo;
 
 	/**
 	 * Launch the application.
@@ -82,6 +100,7 @@ public class paint {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		frmPaint = new JFrame();
 		frmPaint.setIconImage(Toolkit.getDefaultToolkit().getImage(paint.class.getResource("/paquete/icons8.png")));
 		frmPaint.setTitle("Paint");
@@ -90,6 +109,7 @@ public class paint {
 		
 		JPanel panel_Herramientas = new JPanel();
 		frmPaint.getContentPane().add(panel_Herramientas, BorderLayout.NORTH);
+		panel_Herramientas.setBorder(new LineBorder(new Color(0, 0, 0), 4));
 		panel_Herramientas.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JPanel panel_2 = new JPanel();
@@ -186,8 +206,15 @@ public class paint {
 		
 		JSlider slider = new JSlider();
 		slider.setBackground(Color.WHITE);
-		slider.setValue(25);
-		slider.setPaintLabels(true);
+		slider.setMinimum(1);
+		slider.setMaximum(40);
+		slider.setValue(10);
+		slider.setPaintTicks(true);
+		slider.setMajorTickSpacing(10);
+		slider.setMinorTickSpacing(1);
+		slider.addChangeListener(e ->{
+			currentStrokeWidth = slider.getValue();
+		});
 		panel_7.add(slider);
 		
 		//FORMAS////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,58 +292,37 @@ public class paint {
 		
 		panel_4.setLayout(new BorderLayout(0, 0));
 		
-		JButton grosor = new JButton("Limpiar");
+		JButton Limpiar = new JButton("Limpiar");
 		Border borde = BorderFactory.createLineBorder(Color.RED, 4);
-		grosor.setBorder(borde);
-		panel_4.add(grosor);
+		Limpiar.setBorder(borde);
+		Limpiar.addActionListener(e ->{
+			int responde = JOptionPane.showConfirmDialog(frmPaint, "Seguro quieres elimiar todo?", "confirmar la limpieza", JOptionPane.YES_NO_OPTION);
+			
+			if (responde == JOptionPane.YES_NO_OPTION) {
+				listaDeTrazos.clear();
+				points.clear();
+				drawingPanel.repaint();
+			}
+		});
+		panel_4.add(Limpiar);
 		
 		//PANTALLA DE DIBUJO/////////////////////////////////////////////////////////////////////////////////////
 		
-		JPanel panel_Dibujo = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-					Graphics2D g2d = (Graphics2D) g;
-					
-				for (ColoredShape coloredShape : shapes) {
-                    g2d.setColor(coloredShape.color);
-                    g2d.setStroke(new BasicStroke(strokeSize));
-                    g2d.draw(coloredShape.shape);
-                }
-
-			}
-		};
-		/*panel_Dibujo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-		frmPaint.getContentPane().add(panel_Dibujo, BorderLayout.CENTER);*/
-
-		panel_Dibujo.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				startPoint = e.getPoint();
-				shapes.add(new ColoredShape(new Line2D.Double(startPoint,startPoint), currentColor));
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				startPoint = null;
-			}
-		});
-
-		panel_Dibujo.addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseDragged(MouseEvent e) {
-				if (startPoint != null) {
-					ColoredShape lasteShape = shapes.get(shapes.size()-1);
-					lasteShape.shape = new Line2D.Double(startPoint, e.getPoint());
-					startPoint = e.getPoint();
-					
-					panel_Dibujo.repaint();
-				}
-			}
-		});
+		drawingPanel = new DrawingPanel();
+		frmPaint.add(drawingPanel, BorderLayout.CENTER);
+		
+		drawingPanel.addMouseListener(this);
+		drawingPanel.addMouseMotionListener(this);
+		
+		
+		/*JPanel panel_Dibujo = new JPanel();
 		panel_Dibujo.setBorder(new LineBorder(new Color(0, 0, 0), 4));
-		frmPaint.getContentPane().add(panel_Dibujo, BorderLayout.CENTER);
+		frmPaint.add(panel_Dibujo, BorderLayout.CENTER);*/
 
 		//COLORES////////////////////////////////////////////////////////////////////////////////////////////////		
 		JPanel panel_Colores = new JPanel();
 		frmPaint.getContentPane().add(panel_Colores, BorderLayout.WEST);
+		panel_Colores.setBorder(new LineBorder(new Color(0, 0, 0), 4));
 		panel_Colores.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblNewLabel_3 = new JLabel("Colores");
@@ -329,57 +335,140 @@ public class paint {
 		panel.setLayout(new GridLayout(6, 0, 0, 0));
 		
 		
+		JButton Blanco = new JButton("Blanco");
+		Blanco.setBackground(Color.WHITE);
+		Blanco.addActionListener(e -> currentColor = Color.WHITE);
+		panel.add(Blanco);
 		
-		JButton btnNewButton_2 = new JButton("Blanco");
-		btnNewButton_2.setBackground(Color.WHITE);
-        btnNewButton_2.addActionListener(e -> {
-            currentColor = Color.WHITE;
-            //currentShape = "Eraser";
-        });
-		panel.add(btnNewButton_2);
+		JButton Negro = new JButton("Negro");
+		Negro.addActionListener(e -> currentColor = Color.BLACK);
+		Negro.setBackground(Color.BLACK);
+		Negro.setForeground(Color.WHITE);
+		panel.add(Negro);
 		
-		JButton btnNewButton_3 = new JButton("Negro");
-		 btnNewButton_3.setBackground(Color.BLACK);
-	        btnNewButton_3.setForeground(Color.WHITE);
-	        btnNewButton_3.addActionListener(e -> {
-	            currentColor = Color.BLACK;
-	            startPoint = e;
-	        });
-		panel.add(btnNewButton_3);
+		JButton Gris = new JButton("Gris");
+		Gris.setBackground(Color.GRAY);
+		Gris.setForeground(Color.WHITE);
+		Gris.addActionListener(e -> currentColor = Color.GRAY);
+		panel.add(Gris);
 		
-		JButton btnNewButton_4 = new JButton("Gris");
-		btnNewButton_4.setBackground(Color.GRAY);
-		btnNewButton_4.setForeground(Color.WHITE);
-		btnNewButton_4.addActionListener(e -> {
-	            currentColor = Color.GRAY;
-	            //currentShape = "Brush";
-	        });
-		panel.add(btnNewButton_4);
+		JButton Rojo = new JButton("Rojo");
+		Rojo.setBackground(Color.RED);
+		Rojo.addActionListener(e -> currentColor = Color.RED);
+		panel.add(Rojo);
 		
-		JButton btnNewButton_5 = new JButton("Rojo");
-		btnNewButton_5.setBackground(Color.RED);
-		btnNewButton_5.addActionListener(e -> {
-            currentColor = Color.RED; 
-            //currentShape = "Brush";
-        });
-		panel.add(btnNewButton_5);
+		JButton Verde = new JButton("Verde");
+		Verde.setBackground(Color.GREEN);
+		Verde.addActionListener(e -> currentColor = Color.GREEN);
+		panel.add(Verde);
 		
-		JButton btnNewButton_6 = new JButton("Verde");
-		btnNewButton_6.setBackground(Color.GREEN);
-		btnNewButton_6.addActionListener(e -> {
-            currentColor = Color.GREEN;
-            //currentShape = "Brush";
-        });
-		panel.add(btnNewButton_6);
-		
-		JButton btnNewButton_7 = new JButton("Azul");
-		btnNewButton_7.setBackground(Color.BLUE);
-		btnNewButton_7.addActionListener(e -> {
-            currentColor = Color.BLUE;
-            //currentShape = "Brush";
-        });
-		btnNewButton_7.setForeground(Color.WHITE);
-		panel.add(btnNewButton_7);
+		JButton Azul = new JButton("Azul");
+		Azul.setBackground(Color.BLUE);
+		Azul.setForeground(Color.WHITE);
+		Azul.addActionListener(e -> currentColor = Color.BLUE);
+		panel.add(Azul);
 	}
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		lastPoint = e.getPoint();
+		
+		points.add(lastPoint);
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Point>listaCopiada = new ArrayList<>(points);
+		
+		Trazo nuevoTrazo = new Trazo (new ArrayList<>(points),currentStrokeWidth,currentColor);
+		
+		//Trazo nuevotraTrazo = new Trazo(new ArrayList<>(points), currentColor);
+		listaDeTrazos.add(nuevoTrazo);
+		points.clear();
+		
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		Point newPoint = e.getPoint();
+		
+		points.add(newPoint);
+		
+		drawingPanel.repaint();
+		
+		lastPoint = newPoint;
+		
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	class DrawingPanel extends JPanel{
+		
+		public DrawingPanel() {
+			
+			setBackground(Color.WHITE);
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			
+			for (Trazo trazo : listaDeTrazos) {
+				g2d.setStroke(new BasicStroke(trazo.grosor));
+				g2d.setColor(trazo.getColor());
+				
+				for (int i = 1; i < trazo.puntos.size(); i++) {
+					Point p1 = trazo.puntos.get(i - 1);
+					Point p2 = trazo.puntos.get(i);
+					g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+
+				}
+			}
+			
+			g2d.setStroke(new BasicStroke(currentStrokeWidth));
+			g2d.setColor(currentColor);
+			for (int i = 1; i < points.size(); i++) {
+				Point p1 = points.get(i - 1);
+				Point p2 = points.get(i);
+				g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+			}
+		}
+	}
+	
+	
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 
 }
