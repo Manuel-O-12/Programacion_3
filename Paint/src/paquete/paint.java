@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Shape;
 
 import javax.swing.JButton;
@@ -72,6 +73,13 @@ public class paint implements MouseListener, MouseMotionListener {
     private float currentStrokeWidth = 5.0f;
     
     private Color currentColor = Color.BLACK;
+    
+    private List<Rectangle> figuras = new ArrayList<>();
+    private List<Triangle> figuras_1 = new ArrayList<>();
+    private List<Oval> figura_2 = new ArrayList<>();
+    
+    
+    private int method = 1;
 
 	/**
 	 * Launch the application.
@@ -177,7 +185,7 @@ public class paint implements MouseListener, MouseMotionListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				method = 1;
 				
 			}
 		});
@@ -245,6 +253,14 @@ public class paint implements MouseListener, MouseMotionListener {
 		Cuadrado.setFocusPainted(false);
 		Cuadrado.setContentAreaFilled(true); 
 		Cuadrado.setPreferredSize(new Dimension(scaledImage_8.getWidth(null), scaledImage_8.getHeight(null)));
+		Cuadrado.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				method = 2;
+			}
+		});
 		panel_9.add(Cuadrado);
 		
 		JButton Circulo = new JButton("");
@@ -258,6 +274,14 @@ public class paint implements MouseListener, MouseMotionListener {
 		Circulo.setFocusPainted(false);
 		Circulo.setContentAreaFilled(true); 
 		Circulo.setPreferredSize(new Dimension(scaledImage_9.getWidth(null), scaledImage_8.getHeight(null)));
+		Circulo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				method = 3;
+			}
+		});
 		panel_9.add(Circulo);
 		
 		JButton Triangulo = new JButton("");
@@ -271,6 +295,14 @@ public class paint implements MouseListener, MouseMotionListener {
 		Triangulo.setFocusPainted(false);
 		Triangulo.setContentAreaFilled(true); 
 		Triangulo.setPreferredSize(new Dimension(scaledImage_10.getWidth(null), scaledImage_8.getHeight(null)));
+		Triangulo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				method = 4;
+			}
+		});
 		panel_9.add(Triangulo);
 		
 		JButton Linea = new JButton("");
@@ -301,7 +333,11 @@ public class paint implements MouseListener, MouseMotionListener {
 			if (responde == JOptionPane.YES_NO_OPTION) {
 				listaDeTrazos.clear();
 				points.clear();
+				figuras.clear();
+				figuras_1.clear();
+				figura_2.clear();
 				drawingPanel.repaint();
+				
 			}
 		});
 		panel_4.add(Limpiar);
@@ -374,7 +410,22 @@ public class paint implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if (method==2) {
+			Rectangle tmp = new Rectangle(e.getX(), e.getY(), 100, 100);
+			figuras.add(tmp);
+		}
 		
+		if (method==4) {
+			Triangle tmp = new Triangle(e.getX(), e.getY(), 100);
+			figuras_1.add(tmp);
+		}
+		
+		if (method==3) {
+			Oval tmp = new Oval(e.getX(), e.getY());
+			figura_2.add(tmp);
+		}
+		
+		drawingPanel.repaint();
 	}
 
 	@Override
@@ -419,7 +470,9 @@ public class paint implements MouseListener, MouseMotionListener {
 		// TODO Auto-generated method stub
 		Point newPoint = e.getPoint();
 		
-		points.add(newPoint);
+		if (method==1) {
+			points.add(newPoint);
+		}
 		
 		drawingPanel.repaint();
 		
@@ -451,6 +504,7 @@ public class paint implements MouseListener, MouseMotionListener {
 				}
 			}
 			
+			
 			g2d.setStroke(new BasicStroke(currentStrokeWidth));
 			g2d.setColor(currentColor);
 			for (int i = 1; i < points.size(); i++) {
@@ -458,10 +512,58 @@ public class paint implements MouseListener, MouseMotionListener {
 				Point p2 = points.get(i);
 				g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
 			}
+			
+			for (Iterator iterator = figuras.iterator(); iterator.hasNext();) {
+				Rectangle rectangle = (Rectangle) iterator.next();
+				
+				g2d.drawRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+				
+			}
+			
+			for (Triangle triangle : figuras_1) {
+		        g2d.drawPolygon(triangle.xPoints, triangle.yPoints, 3);
+		    }
+			
+			for (Iterator iterator = figura_2.iterator(); iterator.hasNext();) {
+				Oval oval = (Oval) iterator.next();
+				g2d.drawOval(oval.x, oval.y, 100, 100);
+			}
 		}
 	}
 	
-	
+		class Rectangle{
+	 		
+	 		private int x,y,w,h;
+	 		
+	 		public Rectangle(int x, int y,int w, int h)
+	 		{
+	 			this.x = x;
+	 			this.y = y;
+	 			this.w = w;
+	 			this.h = h;
+	 		}
+	 	}
+		
+		class Triangle {
+		    private int[] xPoints;
+		    private int[] yPoints;
+
+		    public Triangle(int x, int y, int size) {
+		        this.xPoints = new int[] { x, x - size, x + size };
+		        this.yPoints = new int[] { y, y + size, y + size };
+		    }
+		}
+		
+		class Oval{
+			
+			private int x,y;
+			
+			public Oval(int x, int y) {
+				this.x = x;
+				this.y = y;
+			}
+			
+		}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
