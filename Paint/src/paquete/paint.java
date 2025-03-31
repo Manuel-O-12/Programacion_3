@@ -70,7 +70,7 @@ public class paint implements MouseListener, MouseMotionListener {
  	
      List<Trazo> listaDeTrazos = new ArrayList<>();
      
-    private float tamano_Grosor = 5.0f;
+    private float tamano_Grosor = 5.0f; 
     
     private Color nuevoColor = Color.BLACK;
     
@@ -203,6 +203,14 @@ public class paint implements MouseListener, MouseMotionListener {
 		btnNewButton_1.setFocusPainted(false);
 		btnNewButton_1.setContentAreaFilled(true); 
 		btnNewButton_1.setPreferredSize(new Dimension(scaledImage.getWidth(null), scaledImage.getHeight(null)));
+		btnNewButton_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				method = 5;
+			}
+		});
 		panel_7.add(btnNewButton_1);
 		//GROSOSR/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JLabel lblNewLabel_2 = new JLabel("Grosor");
@@ -345,7 +353,7 @@ public class paint implements MouseListener, MouseMotionListener {
 		//PANTALLA DE DIBUJO/////////////////////////////////////////////////////////////////////////////////////
 		
 		drawingPanel = new DrawingPanel();
-		frmPaint.add(drawingPanel, BorderLayout.CENTER);
+		frmPaint.getContentPane().add(drawingPanel, BorderLayout.CENTER);
 		
 		drawingPanel.addMouseListener(this);
 		drawingPanel.addMouseMotionListener(this);
@@ -371,7 +379,7 @@ public class paint implements MouseListener, MouseMotionListener {
 		panel.setLayout(new GridLayout(6, 0, 0, 0));
 		
 		
-		JButton Blanco = new JButton("Blanco");
+		JButton Blanco = new JButton("BORRADOR");
 		Blanco.setBackground(Color.WHITE);
 		Blanco.addActionListener(e -> nuevoColor = Color.WHITE);
 		panel.add(Blanco);
@@ -403,6 +411,27 @@ public class paint implements MouseListener, MouseMotionListener {
 		Azul.setForeground(Color.WHITE);
 		Azul.addActionListener(e -> nuevoColor = Color.BLUE);
 		panel.add(Azul);
+		
+		JButton Naranja = new JButton("Naranja");
+		Naranja.setBackground(Color.ORANGE);
+		Naranja.setForeground(Color.WHITE);
+		Naranja.addActionListener(e -> nuevoColor = Color.ORANGE);
+		panel.add(Naranja);
+		
+		JButton Rosa = new JButton("Rosa");
+		Rosa.setBackground(Color.PINK);
+		Rosa.addActionListener(e -> nuevoColor = Color.PINK);
+		panel.add(Rosa);
+		
+		JButton Magenta = new JButton("Violeta");
+		Magenta.setBackground(Color.MAGENTA);
+		Magenta.addActionListener(e -> nuevoColor= Color.MAGENTA);
+		panel.add(Magenta);
+		
+		JButton Amarillo = new JButton("Amarillo");
+		Amarillo.setBackground(Color.YELLOW);
+		Amarillo.addActionListener(e -> nuevoColor= Color.YELLOW);
+		panel.add(Amarillo);
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -411,17 +440,17 @@ public class paint implements MouseListener, MouseMotionListener {
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if (method==2) {
-			Rectangle tmp = new Rectangle(e.getX(), e.getY(), 100, 100,nuevoColor);
+			Rectangle tmp = new Rectangle(e.getX(), e.getY(), 100, 100,nuevoColor,tamano_Grosor);
 			figuras_R.add(tmp);
 		}
 		
 		if (method==3) {
-			Oval tmp = new Oval(e.getX(), e.getY(),nuevoColor);
+			Oval tmp = new Oval(e.getX(), e.getY(),nuevoColor,tamano_Grosor);
 			figura_OV.add(tmp);
 		}
 		
 		if (method==4) {
-			Triangle tmp = new Triangle(e.getX(), e.getY(), 100,nuevoColor);
+			Triangle tmp = new Triangle(e.getX(), e.getY(), 100,nuevoColor,tamano_Grosor);
 			figuras_T.add(tmp);
 		}
 		
@@ -441,14 +470,18 @@ public class paint implements MouseListener, MouseMotionListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-		ArrayList<Point>listaCopiada = new ArrayList<>(points);
+		if (method == 5) {
+			
+		} else {
+			ArrayList<Point>listaCopiada = new ArrayList<>(points);
 		
 		Trazo nuevoTrazo = new Trazo (new ArrayList<>(points),tamano_Grosor,nuevoColor);
 		
 		//Trazo nuevotraTrazo = new Trazo(new ArrayList<>(points), currentColor);
 		listaDeTrazos.add(nuevoTrazo);
 		points.clear();
-		
+		}
+		points.clear();
 		
 	}
 
@@ -472,7 +505,18 @@ public class paint implements MouseListener, MouseMotionListener {
 		
 		if (method==1) {
 			points.add(newPoint);
+		}else if (method == 5) {
+			for(Trazo trazo : listaDeTrazos) {
+				Iterator<Point>iterator = trazo.puntos.iterator();
+				while (iterator.hasNext()) {
+					Point point = (Point) iterator.next();
+					if (point.distance(newPoint)<tamano_Grosor) {
+						iterator.remove();
+					}
+				}
+			}
 		}
+		
 		
 		drawingPanel.repaint();
 		
@@ -505,7 +549,7 @@ public class paint implements MouseListener, MouseMotionListener {
 			}
 			
 			
-			g2d.setStroke(new BasicStroke(tamano_Grosor));
+			//g2d.setStroke(new BasicStroke(tamano_Grosor));
 			g2d.setColor(nuevoColor);
 			for (int i = 1; i < points.size(); i++) {
 				Point p1 = points.get(i - 1);
@@ -516,18 +560,21 @@ public class paint implements MouseListener, MouseMotionListener {
 			for (Iterator iterator = figuras_R.iterator(); iterator.hasNext();) {
 				Rectangle rectangle = (Rectangle) iterator.next();
 				g2d.setColor(rectangle.getColor());
+				g2d.setStroke( new BasicStroke(rectangle.getGrosor()));
 				g2d.drawRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
 				
 			}
 			
 			for (Triangle triangle : figuras_T) {
 				g2d.setColor(triangle.getColor());
+				g2d.setStroke( new BasicStroke(triangle.getGrosor()));
 		        g2d.drawPolygon(triangle.x, triangle.y, 3);
 		    }
 			
 			for (Iterator iterator = figura_OV.iterator(); iterator.hasNext();) {
 				Oval oval = (Oval) iterator.next();
 				g2d.setColor(oval.getColor());
+				g2d.setStroke( new BasicStroke(oval.getGrosor()));
 				g2d.drawOval(oval.x, oval.y, 100, 100);
 			}
 		}
@@ -537,17 +584,23 @@ public class paint implements MouseListener, MouseMotionListener {
 	 		
 	 		private int x,y,w,h;
 	 		private Color color;
+			private Object grosor;
 	 		
-	 		public Rectangle(int x, int y,int w, int h, Color color)
+	 		public Rectangle(int x, int y,int w, int h, Color color, Object grosor)
 	 		{
 	 			this.x = x;
 	 			this.y = y;
 	 			this.w = w;
 	 			this.h = h;
 	 			this.color = color;
+	 			this.grosor = grosor;
 	 		}
 	 		public Color getColor(){
 	 			return color;
+	 		}
+	 		public float getGrosor(){
+				return (float) grosor;
+	 			
 	 		}
 	 	}
 		
@@ -555,14 +608,20 @@ public class paint implements MouseListener, MouseMotionListener {
 		    private int[] x;
 		    private int[] y;
 		    private Color color;
+			private Object grosor;
 
-		    public Triangle(int x, int y, int size, Color color) {
+		    public Triangle(int x, int y, int size, Color color, Object grosor) {
 		        this.x = new int[] { x, x - size, x + size };
 		        this.y = new int[] { y, y + size, y + size };
 		        this.color = color;
+		        this.grosor = grosor;
 		    }
 		    public Color getColor(){
 	 			return color;
+	 		}
+		    public float getGrosor(){
+				return (float) grosor;
+	 			
 	 		}
 		}
 		
@@ -570,16 +629,21 @@ public class paint implements MouseListener, MouseMotionListener {
 			
 			private int x,y;
 			private Color color;
+			private float grosor;
 			
-			public Oval(int x, int y, Color color) {
+			public Oval(int x, int y, Color color, Float grosor) {
 				this.x = x;
 				this.y = y;
 				this.color = color;
+				this.grosor = grosor;
 			}
 			public Color getColor(){
 	 			return color;
 	 		}
-			
+			public float getGrosor(){
+				return (float) grosor;
+	 			
+	 		}
 		}
 
 	@Override
