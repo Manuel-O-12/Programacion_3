@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,12 +18,18 @@ import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Component;
 import java.awt.Rectangle;
+import javax.swing.Timer;
 
 public class Pacman implements KeyListener {
 
 	private JFrame frmPacman;
-	private pacman tablero;
+	private DrawingPanel tablero;
 	private int x=300,y=200;
+	private Player Pacman;
+	private List<Player>Paredes = new ArrayList<>();
+	Timer timer;
+	private int press =0;
+	
 
 	/**
 	 * Launch the application.
@@ -55,12 +64,21 @@ public class Pacman implements KeyListener {
 		frmPacman.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(0, 0, 0));
+		panel.setBackground(Color.CYAN);
 		frmPacman.getContentPane().add(panel, BorderLayout.NORTH);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(0, 0, 0));
+		panel_1.setBackground(Color.CYAN);
 		frmPacman.getContentPane().add(panel_1, BorderLayout.SOUTH);
+		
+		//****PERSONAJE****//////////////////////////////////////////////////////
+		Pacman=new Player(200, 200, 30, 30, Color.YELLOW);
+		
+		//****PAREDES****///////////////////////////////////////////////////////
+		Paredes.add(new Player(300, 300, 200, 30, Color.BLUE));
+		Paredes.add(new Player(120, 50, 200, 30, Color.BLUE));
+		Paredes.add(new Player(600, 70, 30, 200, Color.BLUE));
+		
 		
 		JButton Reinicio = new JButton("REINICIAR");
 		Reinicio.setForeground(new Color(255, 255, 255));
@@ -71,8 +89,8 @@ public class Pacman implements KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				x=300;
-				y=200;
+				Pacman.x=300;
+				Pacman.y=200;
 				
 				tablero.repaint();
 				tablero.requestFocus();
@@ -80,8 +98,20 @@ public class Pacman implements KeyListener {
 		});
 		panel_1.add(Reinicio);
 		
-		tablero = new pacman();
-		tablero.setBackground(Color.BLUE);
+		ActionListener taskPerformer = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				punch();
+			}
+		};
+		timer = new Timer(2, taskPerformer);////////CONTROL DE VELOCIDAD //////////
+        //timer.start();
+        
+		
+		tablero = new DrawingPanel();
+		tablero.setBackground(Color.BLACK);
 		frmPacman.getContentPane().add(tablero, BorderLayout.CENTER);
 		
 		
@@ -90,10 +120,10 @@ public class Pacman implements KeyListener {
 		
 	}
 	
-	class pacman extends JPanel{
+	class DrawingPanel extends JPanel{
 		
-		public pacman() {
-			setBackground(Color.WHITE);
+		public DrawingPanel() {
+			setBackground(Color.BLUE);
 		}
 		
 		@Override
@@ -101,9 +131,13 @@ public class Pacman implements KeyListener {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
 			
-			g2d.setColor(Color.YELLOW);
-			g2d.fillOval(x, y, 30, 30);
+			g2d.setColor(Pacman.color);
+			g2d.fillOval(Pacman.x, Pacman.y, Pacman.w, Pacman.h);
 			
+			for (Player pared : Paredes) {
+				g2d.setColor(pared.color);
+				g2d.fillRect(pared.x, pared.y, pared.w, pared.h);
+			}
 			
 		}
 	}
@@ -117,41 +151,108 @@ public class Pacman implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getKeyCode());
-		/*38arr
-		40aba
-		39dere
-		37izq*/
+		press = e.getKeyCode();
+		timer.start();
+		punch();
+	}
 		
-		if (e.getKeyCode() == 87 || e.getKeyCode() == 38) {
-			y-=5;
-			if (y<=-30) {
-				y=440;
+		public void punch() {
+			Boolean colision=false;
+		
+			for (Player pared : Paredes) {
+				if (Pacman.colision(pared)) {
+					colision = true;
+					
+				}
+			}
+		
+		
+		if (press == 87 || press == 38) {
+			if (Pacman.y<=-25) {
+				Pacman.y=410;
+			}
+			
+			if (!colision) {
+				Pacman.y-=1;
+			} else {
+				Pacman.y+=1;
+				press=0;
+			}
+			
+		}
+		
+		if (press == 83 || press == 40) {
+			if (Pacman.y>=410) {
+				Pacman.y=-25;
+			}
+			
+			if (!colision) {
+				Pacman.y+=1;
+			} else {
+				Pacman.y-=1;
+				press=0;
 			}
 		}
 		
-		if (e.getKeyCode() == 83 || e.getKeyCode() == 40) {
-			y+=5;
-			if (y>=440) {
-				y=-25;
+		if (press == 65 || press == 37) {
+			if (Pacman.x<=-30) {
+				Pacman.x=680;
+				press=0;
 			}
+			
+			if (!colision) {
+				Pacman.x-=1;
+			} else {
+				Pacman.x+=1;
+				press=0;
+			}
+			
 		}
 		
-		if (e.getKeyCode() == 65 || e.getKeyCode() == 37) {
-			x-=5;
-			if (x<=-30) {
-				x=680;
+		if (press == 68 || press == 39) {
+			if (Pacman.x>=684) {
+				Pacman.x=-35;
 			}
-		}
-		
-		if (e.getKeyCode() == 68 || e.getKeyCode() == 39) {
-			x+=5;
-			if (x>=684) {
-				x=-35;
+			
+			if (!colision) {
+				Pacman.x+=1;
+			} else {
+				Pacman.x-=1;
+				press=0;
 			}
+			
 		}
 		
 		tablero.repaint();
+	}
+		
+	
+	class Player{
+		int x,y,w,h;
+		Color color;
+		
+		public Player(int x, int y, int w, int h, Color color) {
+			this.x=x;
+			this.y=y;
+			this.w=w;
+			this.h=h;
+			this.color=color;
+		}
+		
+		public Boolean colision(Player target) {
+			if(this.x < target.x + target.w &&
+
+					this.x + this.w > target.x &&
+
+					this.y < target.y + target.h &&
+
+					this.y + this.h > target.y) 
+			{
+				return true;
+			}
+			return false;
+		}
+		
 	}
 
 	@Override
