@@ -19,6 +19,9 @@ import javax.swing.JButton;
 import java.awt.Component;
 import java.awt.Rectangle;
 import javax.swing.Timer;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class Pacman implements KeyListener {
 
@@ -27,10 +30,13 @@ public class Pacman implements KeyListener {
 	private int x=300,y=200;
 	private Player Pacman;
 	private List<Player>Paredes = new ArrayList<>();
+	Timer run;
 	Timer timer;
 	private int press =0;
+	private JLabel tiempo;
+	private int seg=0,seg_2=0;
 	
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -72,7 +78,7 @@ public class Pacman implements KeyListener {
 		frmPacman.getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
 		//****PERSONAJE****//////////////////////////////////////////////////////
-		Pacman=new Player(200, 200, 30, 30, Color.YELLOW);
+		Pacman=new Player(300, 200, 30, 30, Color.YELLOW);
 		
 		//****PAREDES****///////////////////////////////////////////////////////
 		Paredes.add(new Player(300, 300, 200, 30, Color.BLUE));
@@ -92,12 +98,46 @@ public class Pacman implements KeyListener {
 				Pacman.x=300;
 				Pacman.y=200;
 				
-				tablero.repaint();
+				/*tablero.repaint();
+				tablero.requestFocus();*/
+				run.stop();
+				timer.stop();
+					
+				seg=0;
+				seg_2=0;
+		        tiempo.setText(seg + ":" + (seg_2 < 10 ? "0" + seg_2 : seg_2));
+		        
+		        timer.start();
+		        
+		        tablero.repaint();
 				tablero.requestFocus();
 			}
 		});
+		panel_1.setLayout(new BorderLayout(150, 0));
 		panel_1.add(Reinicio);
 		
+		tiempo = new JLabel("0:0");
+		tiempo.setFont(new Font("Arial Black", Font.BOLD, 16));
+		panel_1.add(tiempo, BorderLayout.EAST);
+		//****TIEMPO****//////////////////////////////////////////////////////
+		ActionListener cronometro = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				seg_2 += 1;
+                if (seg_2 >= 60) {
+                    seg++;
+                    seg_2 = 1;
+                }
+                tiempo.setText(seg + ":" + (seg_2 < 10 ? "0" + seg_2 : seg_2));
+			}
+		};
+		timer = new Timer(1000, cronometro);
+        timer.start();
+		
+        
+        //****VELOCIDAD****//////////////////////////////////////////////////////
 		ActionListener taskPerformer = new ActionListener() {
 			
 			@Override
@@ -106,8 +146,8 @@ public class Pacman implements KeyListener {
 				punch();
 			}
 		};
-		timer = new Timer(2, taskPerformer);////////CONTROL DE VELOCIDAD //////////
-        //timer.start();
+		run = new Timer(2, taskPerformer);////////CONTROL DE VELOCIDAD //////////
+        run.start();
         
 		
 		tablero = new DrawingPanel();
@@ -152,7 +192,7 @@ public class Pacman implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		press = e.getKeyCode();
-		timer.start();
+		run.start();
 		punch();
 	}
 		
@@ -224,6 +264,7 @@ public class Pacman implements KeyListener {
 		}
 		
 		tablero.repaint();
+
 	}
 		
 	
