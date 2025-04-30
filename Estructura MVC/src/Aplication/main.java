@@ -9,6 +9,7 @@ public class main {
 		
 		AuthControlador aplication = new AuthControlador();
 		aplication.Login();
+		//aplication.Register();
 		
 	}
 

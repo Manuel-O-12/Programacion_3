@@ -79,6 +79,7 @@ public class Ventana extends JFrame {
 	}
 	
 	public JPanel login() {
+		
 		JPanel Panel = new JPanel();
 		//Panel.setBackground(Color.BLUE);
 		Panel.setOpaque(false);
