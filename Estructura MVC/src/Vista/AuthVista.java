@@ -138,6 +138,9 @@ public class AuthVista extends JFrame {
                 if (flag1 && flag2) {
                     JOptionPane.showMessageDialog(null, "REGISTRO EXITOSO");
                 }
+                else {
+                	JOptionPane.showMessageDialog(null, "Registro fall. Intente de nuevo");
+                }
             }
         });
 
